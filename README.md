@@ -19,7 +19,7 @@
 - Категории
 
 # Технологии
-Jetpack Compose, MVVM, Clean Architecture с разделением на модули, HILT, JSON, Coroutines, Navigation Compose, Lottie animation
+Kotlin, Jetpack Compose, MVVM, Clean Architecture с разделением на модули, HILT, JSON, Coroutines, Navigation Compose, Lottie animation
 
 # Фичи
 - Иконка
