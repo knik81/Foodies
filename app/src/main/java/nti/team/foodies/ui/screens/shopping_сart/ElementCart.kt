@@ -1,10 +1,10 @@
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,34 +35,32 @@ fun ElementCart(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, start = 5.dp, end = 5.dp)
-            .fillMaxSize()
+            .padding(top = 20.dp, start = 1.dp, end = 1.dp)
+            .height(110.dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(BackgroundCardColor),
     ) {
         //картинка
-        Box {
-            if (product.image == "1.jpg")
-                Image(
-                    modifier = Modifier.height(110.dp),
-                    painter = painterResource(id = R.drawable.photo2),
-                    contentDescription = "изображение продукта"
-                )
+        if (product.image == "1.jpg")
+            Image(
+                painter = painterResource(id = R.drawable.photo2),
+                contentDescription = "изображение продукта"
+            )
 
-        }
-        Column {
-            Box(Modifier.padding(10.dp)) {
-                Text(
-                    text = product.name ?: "",
-                    fontSize = 15.sp,
-                    color = Color.DarkGray,
-                )
-            }
+        Column(Modifier.fillMaxHeight()) {
+            Text(
+                text = product.name ?: "",
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                maxLines = 2,
+                modifier = Modifier.padding(10.dp)
+            )
 
             //кнопки + цена
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
 
                 //блок кнопок

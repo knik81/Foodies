@@ -45,8 +45,8 @@ fun OnboardingScreen(
             composition = composition
         )
         LaunchedEffect(Unit) {
-            delay(2000)
-            //delay(20)
+            //delay(2000)
+            delay(20)
             navController.popBackStack()
             navController.navigate(Screens.CatalogScreen.route)
         }

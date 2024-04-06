@@ -4,24 +4,22 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
@@ -36,19 +34,14 @@ import nti.team.foodies.ui.theme.ChangeColor
 import java.util.Locale
 
 
-@SuppressLint("MutableCollectionMutableState")
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("MutableCollectionMutableState", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CatalogScreen(
     navController: NavHostController,
     viewModel: CatalogViewModel = hiltViewModel(),
     updateProductList: (Product) -> Unit
 ) {
-
-    //Log.d("Nik", "CatalogScreen")
-
-    //перекрасил статус
-    ChangeColor(LocalView.current, Color.White)
-
 
     //подписка на данные из апи
     val initCheckedFiltersList = viewModel.checkedFiltersStateFlow.collectAsState().value
@@ -84,7 +77,9 @@ fun CatalogScreen(
     checkedFilterList.value = initCheckedFiltersList
 
     //нижнее окно с фильтром
-    val bottomSheetVisible = remember { mutableStateOf(false) }
+    //val bottomSheetVisible = remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     //высота серой кнопки при открытом фильтре
     val buttonHeight = remember {
@@ -100,6 +95,9 @@ fun CatalogScreen(
     val searchName = remember {
         mutableStateOf("")
     }
+
+    //перекрасил статус
+    ChangeColor(LocalView.current, Color.White)
 
     //Log.d("Nik", "1")
 
@@ -126,7 +124,8 @@ fun CatalogScreen(
                     //отрисовка верхней строки с логотипом
                     TopRowIcons(
                         filterCheckSize = filterCheckSize.intValue,
-                        { bottomSheetVisible.value = it },
+                        //{ bottomSheetVisible.value = it },
+                        { showBottomSheet = it },
                         { buttonHeight.intValue = it },
                         {
                             selectorTopRow.value = it
@@ -171,6 +170,7 @@ fun CatalogScreen(
                             }
                         })
                 }
+
                 SelectorTopRow.ERROR -> {}
                 SelectorTopRow.LOADING -> {}
             }
@@ -200,8 +200,8 @@ fun CatalogScreen(
 
             //Log.d("Nik", "${productListFiltered.value}")
             //засунул в бокс, чтобы отобразить кнопку корзины снизу
-            Box(Modifier.clickable { bottomSheetVisible.value = false }) {
-
+            Box(Modifier.clickable { showBottomSheet = false }) {
+                //   Box(Modifier.clickable { bottomSheetVisible.value = false }) {
                 //переменная отступа, чтобы список укоротить
                 val bottomPadding = remember {
                     mutableIntStateOf(2)
@@ -212,7 +212,7 @@ fun CatalogScreen(
                 //отобразить отфильтрованные продукты по категории
                 if (!productListFiltered.value.isNullOrEmpty()) {
 
-                    //адаптация под экран
+                    //адаптация под ориентацию экрана
                     val gridCells = when (LocalConfiguration.current.orientation) {
                         android.content.res.Configuration.ORIENTATION_LANDSCAPE -> 3
                         else -> 2
@@ -255,44 +255,25 @@ fun CatalogScreen(
             }
         }
 
-        //серая кнопка фильтра
-        Box(
-            modifier = Modifier
-                .height(buttonHeight.intValue.dp)
-                .fillMaxSize()
-        ) {
-            Button(
-                onClick = {
-                    buttonHeight.intValue = 0
-                    bottomSheetVisible.value = false
-                },
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(0.5f),
-                shape = RoundedCornerShape(0),
-                colors = ButtonDefaults.buttonColors(Color.LightGray)
-            ) {}
-        }
+
     }
 
     //открыть нижнее окно с фильтрами
-    if (bottomSheetVisible.value) {
-        checkedFilterList.value?.let {
-            BottomSheetFilters(
-                it
-            ) { tags, isChecked ->
+    if (showBottomSheet) {
+        BottomSheetFilters(
+            checkedFiltersList = checkedFilterList.value,
+            sheetState = sheetState,
+            { showBottomSheet = it },
+            { tags, isChecked ->
                 checkedFilterList.value!!.forEach { checkedFilter ->
                     if (checkedFilter.tags == tags)
                         checkedFilter.isChecked = isChecked
                 }
-                //Log.d("Nik", "filterList ${filterList.value}")
                 checkedFilterList.value!!
             }
-        }
+        )
     }
 }
-
-
 
 
 

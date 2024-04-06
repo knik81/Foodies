@@ -2,6 +2,8 @@
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -25,8 +27,8 @@ fun ButtonsCartElement(
     click: (Int) -> Unit
 ) {
     if (!isFillMaxWidth)
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Row( Modifier.fillMaxHeight().padding(bottom = 5.dp),
+            verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ButtonsOnly(amountProduct) {
@@ -35,8 +37,8 @@ fun ButtonsCartElement(
         }
     else
         Row(
-            Modifier.fillMaxWidth(),//.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ButtonsOnly(amountProduct) {
@@ -51,10 +53,7 @@ fun ButtonsOnly(
     click: (Int) -> Unit
 ) {
     Button(
-        onClick = {
-            click(-1)
-        },
-        //modifier = Modifier.width(60.dp),
+        onClick = { click(-1) },
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(Color.White),
     ) {
@@ -67,7 +66,7 @@ fun ButtonsOnly(
     }
 
     Text(
-        fontSize = 25.sp,
+        fontSize = 20.sp,
         text = amountProduct.toString(),//amount.intValue.toString(),
         modifier = Modifier.padding(8.dp),
         color = Color.Black
@@ -77,7 +76,7 @@ fun ButtonsOnly(
         onClick = {
             click(1)
         },
-       // modifier = Modifier.width(60.dp),
+        //modifier = Modifier.width(50.dp),
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.buttonColors(Color.White),
     ) {
