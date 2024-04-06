@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             FoodiesTheme {
                 val navController = rememberNavController()
                 NavHostSetup(navHostController = navController)
-                navController.popBackStack(Screens.CatalogScreen.route, true)
+               // navController.popBackStack(Screens.CatalogScreen.route, true)
                 //if(navController.currentBackStackEntry)
 
             }
